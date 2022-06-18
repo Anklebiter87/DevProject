@@ -11,10 +11,8 @@
 #test files
 *.xml
 
-
-#db files
-db.sqlite3*
-test.db
-
 #settings file
-.setting
+.settings
+
+#notes
+notes
