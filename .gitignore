@@ -12,7 +12,7 @@
 *.xml
 
 #settings file
-.settings
+settings.json
 
 #notes
 notes
