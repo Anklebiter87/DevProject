@@ -1,3 +1,7 @@
+<?php
+    require_once 'includes/autoloader.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -5,7 +9,7 @@
 </head>
 <body>
     <?php
-        phpinfo();
+        $db = new DBHandler();
     ?>
 </body>
 </html>
