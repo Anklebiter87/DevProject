@@ -3,11 +3,23 @@
 spl_autoload_register('autoLoader');
 
 function autoLoader($className){
-    $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    $extension = ".php";
-    if (strpos($url, 'includes') !== false){
-        $path = "../classes/";
+    if (array_key_exists('HTTP_HOST', $_SERVER)) {
+        $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
+    else{
+        $url = NULL;
+    }
+    
+    $extension = ".php";
+
+    if ($url !== NULL){
+        if (strpos($url, 'includes') !== false){
+            $path = "../classes/";
+        }
+        else{
+            $path = "classes/";
+        }
+    } 
     else{
         $path = "classes/";
     }
