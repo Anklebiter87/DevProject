@@ -1,6 +1,5 @@
 
 <?php
-require_once "DBHandler.php";
 
 class Users extends DBHandler{
     protected $sqlFilePath = "sql/users.json";
