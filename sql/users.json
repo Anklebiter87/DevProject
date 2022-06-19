@@ -1,0 +1,5 @@
+{
+    "uid": {"type": "int", "null": false},
+    "username": {"type": "varchar", "length": 255, "null": false},
+    "primary": "uid"
+}
