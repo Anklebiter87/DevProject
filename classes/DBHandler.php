@@ -144,7 +144,7 @@ class DBHandler {
         }
     }
 
-    public function execute_query(string $query, array $argv, array $argvTypes){
+    protected function execute_query(string $query, array $argv, array $argvTypes){
         if(!isset($this->conn)){
             $this->connect();
         }
@@ -154,7 +154,7 @@ class DBHandler {
             throw new Exception("Query failed: ($error)");
         }
         if (count($argv) > 0){
-            $stmt->bind_param(implode("",$argvTypes), $argv);
+            $stmt->bind_param(implode("",$argvTypes), ...$argv);
         }
         $stmt->execute();
         return $stmt->get_result();
