@@ -5,8 +5,8 @@ ini_set('display_errors', 1);
 class DBHandler {
     protected $sqlFilePath;
     protected $tableName;
+    protected $settingsPath = "settings.json";
 
-    private $settingsPath = "settings.json";
     private $host;
     private $user;
     private $pass;
@@ -170,7 +170,10 @@ class DBHandler {
     }
 
     private function disconnect(){
-        mysqli_close($this->conn);
+        if(isset($this->conn)){
+            mysqli_close($this->conn);
+        }
+        
     }
 
     public function __destruct(){
