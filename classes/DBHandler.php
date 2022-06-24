@@ -53,11 +53,15 @@ class DBHandler {
 
     private function table_options($jsonData, $key){
         $query = "";
-        if (gettype($jsonData[$key]) == "string"){
-            $query .= "PRIMARY KEY ($jsonData[$key])";
+        if (array_key_exists("options", $jsonData[$key])){
+            $options = $jsonData[$key]['options'];
+            foreach($options as $option){
+                $query .= $option.", ";
+            }
             return $query;
         }
         if (!array_key_exists('type', $jsonData[$key])){
+            echo var_dump($jsonData) . "\n";
             throw new Exception("type not found in ($this->tableName) definition");
         }
         $query .= $key . " " .  $jsonData[$key]['type'];
@@ -92,6 +96,7 @@ class DBHandler {
         foreach(array_keys($jsonData) as $key){
             $query .= $this->table_options($jsonData, $key);
         }
+        $query = rtrim($query, ", ");
         $query .= ");";
         $this->execute_query($query, array(), array());
     }
@@ -114,6 +119,11 @@ class DBHandler {
                 foreach($data as $row){
                     if($row['Field'] == $column){
                         $found = True;
+                        break;
+                    }
+                    elseif ($column == "options"){
+                        $found = True;
+                        break;
                     }
                 }
                 if (!$found){
@@ -124,6 +134,7 @@ class DBHandler {
                     $query .= $this->table_options($jsonData, $column);
                     $query = rtrim($query, ", ");
                     $query .= ";";
+                    echo $query."\n";
                     $this->execute_query($query, array(), array());
                 }
             }
