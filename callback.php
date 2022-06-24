@@ -15,10 +15,18 @@ if (isset($_GET)) {
     if(array_key_exists('code', $_GET)) {
         $code = $_GET['code'];
         $swc = new SWC();
-        $auth = $swc->get_token($code);
+        $auth = $swc->request_token($code);
+        if(isset($auth)){
+            if(!isset($_SESSION)){
+                session_start();
+            }
+            if($swc->check_authentication()){
+                $_SESSION['gamblingtoken'] = $auth->get_uuid();
+                header("Location: index.php");
+            }
+            else{
+                header("Location: login.php");
+            }
+        }
     }
 }
-
-echo var_dump($_POST);
-echo var_dump($_GET);
-echo var_dump($_SESSION);
