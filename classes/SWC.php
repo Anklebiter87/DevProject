@@ -1,11 +1,10 @@
 <?php
 
-require_once 'classes/DBHandler.php';
-
 define('OAUTH_ENDPOINT_AUTH', 'https://www.swcombine.com/ws/oauth2/auth/');
 define('OAUTH_ENDPOINT_TOKEN', 'https://www.swcombine.com/ws/oauth2/token/');
 
 class SWC extends DBHandler {
+    private $token;
     private $redirectUrl;
     private $apiKey;
     private $apiSecret;
@@ -43,7 +42,7 @@ class SWC extends DBHandler {
         header('location: '.$url);
     }
 
-    public function get_token($code, $method=RequestMethods::Post) {
+    public function request_token($code, $method=RequestMethods::Post) {
         $values =   array
                         (
                             "code" => $code
@@ -60,10 +59,15 @@ class SWC extends DBHandler {
             throw new SWCombineWSException('Failed to get token. Reason: '.$response->error, $response->error);
         }
 
-        return new OAuthToken($response->expires_in, $response->access_token, isset($response->refresh_token) ? $response->refresh_token : null);
+        $this->token = new OAuthToken($response->expires_in, $response->access_token, isset($response->refresh_token) ? $response->refresh_token : null);
+        return $this->token;
     }
 
-    private static function make_request($uri, $method, array $values) {
+    public function get_token(){
+        return $this->token;
+    }
+
+    private static function make_request($url, $method, array $values) {
         $body = http_build_query($values);
         $headers = array('accept: '.ContentTypes::JSON);
 
@@ -72,7 +76,7 @@ class SWC extends DBHandler {
     
         if ($method == RequestMethods::Get) {
                 // values should be query parameters so update uri
-                $uri .= '?'.$body;
+                $url .= '?'.$body;
                 $headers[] = 'Content-type: '.ContentTypes::UTF8;
         } else {
                 $headers[] = 'Content-type: '.ContentTypes::FormData;
@@ -80,7 +84,7 @@ class SWC extends DBHandler {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
         // set url and headers
-        curl_setopt($ch, CURLOPT_URL, $uri);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -107,6 +111,14 @@ class SWC extends DBHandler {
         return (object)json_decode($response);
     }
 
+    public function check_authentication(){
+        $token = $this->token->get_access_token();
+        $url = "https://www.swcombine.com/ws/v2.0/character";
+        $values = array("access_token" => $token);
+        $data = $this->make_request($url, "GET", $values);
+        Debug::error_log_print($data);
+        return False;
+    }
 
     public function __construct() {
         $this->api_settings();
