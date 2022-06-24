@@ -16,11 +16,16 @@ class OAuthToken {
 	 * @var string Refresh token used to get renewed Access token.
 	 */
 	private $refresh_token;
+	/**
+	 * @var string session uuid 
+	 */
+	private $uuid;
 	
 	public function __construct($expiresIn, $accessToken, $refreshToken = null) {
 		$this->expires_at = time() + $expiresIn;
 		$this->access_token = $accessToken;
 		$this->refresh_token = $refreshToken;
+		$this->uuid = uniqid('php_');
 	}
 
 	/**
@@ -30,6 +35,10 @@ class OAuthToken {
 	 */
 	public function get_access_token() {
 		return $this->access_token;
+	}
+
+	public function get_uuid(){
+		return $this->uuid;
 	}
 
 	/**
