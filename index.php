@@ -91,18 +91,6 @@ require_once 'includes/pageglobals.php';
                             not be able to play anymore.
                             So, pay your bills and enjoy yoursef.
                         </p>
-                        {%if access == False %}
-                        <h4 style="color:red"> Item access is not enabled. If you go to any other location
-                            any owned cards will be removed.</h4>
-                        <a href="{% url 'profile:profile'%}">
-                            <button type="button" class="btn btn-sm btn-danger">
-                                Enable Inventry Access Now
-                            </button></a>
-                        {%endif%}
-                        {%if debt <= limit%}
-                        <h4 style="color:red"> You reached the credit Line limit and are now unable to play
-                            or watch Pazaak games. </h4>
-                        {%endif%}
                     </div>
                     <div class="col-12 col-sm-6">
                         <div class="card border border-darker">
