@@ -61,7 +61,6 @@ class DBHandler {
             return $query;
         }
         if (!array_key_exists('type', $jsonData[$key])){
-            echo var_dump($jsonData) . "\n";
             throw new Exception("type not found in ($this->tableName) definition");
         }
         $query .= $key . " " .  $jsonData[$key]['type'];
@@ -101,7 +100,7 @@ class DBHandler {
         $this->execute_query($query, array(), array());
     }
 
-    protected function check_schema(){
+    private function check_schema(){
         if (!isset($this->tableName)){
             throw new Exception("Table name not set");
         }
@@ -134,7 +133,6 @@ class DBHandler {
                     $query .= $this->table_options($jsonData, $column);
                     $query = rtrim($query, ", ");
                     $query .= ";";
-                    echo $query."\n";
                     $this->execute_query($query, array(), array());
                 }
             }
@@ -144,7 +142,7 @@ class DBHandler {
         }
     }
 
-    protected function check_table(){
+    private function check_table(){
         if (!isset($this->tableName)){
             throw new Exception("Table name not set");
         }
@@ -153,6 +151,11 @@ class DBHandler {
         if($result->num_rows == 0){
             $this->create_table();
         }
+    }
+
+    protected function database_setup(){
+        $this->check_table();
+        $this->check_schema();
     }
 
     protected function execute_query(string $query, array $argv, array $argvTypes){

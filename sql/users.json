@@ -1,5 +1,5 @@
 {
     "uid": {"type": "int", "null": false},
-    "username": {"type": "varchar", "length": 255, "null": false},
+    "characterName": {"type": "varchar", "length": 255, "null": false},
     "options": {"options": ["PRIMARY KEY (uid)"]}
 }

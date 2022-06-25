@@ -1,0 +1,5 @@
+{
+    "pk": {"type": "int", "null": false, "autoincrement": true},
+    "address": {"type": "varchar", "length": 15, "null": false},
+    "options": {"options": ["PRIMARY KEY (pk)"]}
+}

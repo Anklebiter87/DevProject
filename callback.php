@@ -20,8 +20,16 @@ if (isset($_GET)) {
             if(!isset($_SESSION)){
                 session_start();
             }
-            if($swc->check_authentication()){
-                $_SESSION['gamblingtoken'] = $auth->get_uuid();
+            $info = $swc->check_authentication();
+            if($info != null){
+                //Log it
+                $date = new DateTime();
+                $date->getTimestamp();
+                $swctime = $info->timestamp;
+                $user = new Users($info);
+                $address = $_SERVER["REMOTE_ADDR"];
+                Debug::error_log_print($address);
+                #$_SESSION['gamblingtoken'] = $auth->get_uuid();
                 header("Location: index.php");
             }
             else{

@@ -1,5 +1,7 @@
 {
     "uid": {"type": "int", "null": false, "autoincrement": true},
+    "timestamp": {"type": "int", "null": false},
+    "swctime": {"type": "int", "null": false},
     "userId": {"type": "int", "null": false},
     "message": {"type": "varchar", "length": 500},
     "options": {"options": ["PRIMARY KEY (uid)", "FOREIGN KEY (userId) REFERENCES Users(uid)"]}

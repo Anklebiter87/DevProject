@@ -103,8 +103,12 @@ class SWC extends DBHandler {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
                 break;
         }
-        // execute
+        
         $response = curl_exec($ch);
+        $httpRet = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if($httpRet != 200){
+            throw new SWCombineWSException("Request failed with error: $httpRet", $httpRet);
+        }
         // close connection
         curl_close($ch);
     
@@ -115,9 +119,14 @@ class SWC extends DBHandler {
         $token = $this->token->get_access_token();
         $url = "https://www.swcombine.com/ws/v2.0/character";
         $values = array("access_token" => $token);
-        $data = $this->make_request($url, "GET", $values);
-        Debug::error_log_print($data);
-        return False;
+        try{
+            $data = $this->make_request($url, "GET", $values);
+            return $data;
+        }
+        catch(SWCombineWSException $e){
+            //you should really log this
+            return null;
+        }
     }
 
     public function __construct() {
