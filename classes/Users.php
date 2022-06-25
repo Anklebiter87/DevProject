@@ -77,10 +77,10 @@ class Users extends DBHandler{
         return $this->uid;
     }
 
-    public function __construct($users=null){
+    public function __construct($userInfo=null){
         $this->database_setup();
-        if($users != null){
-            $this->jsonObj = $users;
+        if($userInfo != null){
+            $this->jsonObj = $userInfo;
             $this->process_character_info();
         }
     }

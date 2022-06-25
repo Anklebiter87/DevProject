@@ -1,0 +1,11 @@
+{
+    "uid": {"type": "int", "null": false, "autoincrement": true},
+    "timestamp": {"type": "int", "null": false},
+    "expires": {"type": "int", "null": false},
+    "userId": {"type": "int", "null": false},
+    "refresh": {"type": "varchar", "length": 32, "null": false},
+    "token": {"type": "varchar", "length": 32, "null": false},
+    "options": {"options": ["PRIMARY KEY (uid)", 
+                            "FOREIGN KEY (userId) REFERENCES Users(uid)"
+                            ]}
+}

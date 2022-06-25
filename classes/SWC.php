@@ -37,7 +37,6 @@ class SWC extends DBHandler {
         if($renew) {
             $url .= '&renew_previously_granted=yes';
         }
-        echo var_dump($this);
         header('Accept: '.ContentTypes::JSON);
         header('location: '.$url);
     }
