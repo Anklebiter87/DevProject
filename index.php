@@ -1,9 +1,9 @@
 <?php
 require_once 'includes/autoloader.php';
+require_once 'includes/logincheck.php';
 session_start();
-if (!isset($_SESSION['gamblingtoken'])) {
-    header("Location: login.php");
-}
+authenticated();
+require_once 'includes/pageglobals.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
