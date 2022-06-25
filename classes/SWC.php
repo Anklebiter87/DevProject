@@ -62,6 +62,21 @@ class SWC extends DBHandler {
         return $this->token;
     }
 
+    public function refresh_token($refresh){
+        $values = array(
+            "client_id" => $this->apiKey,
+            "client_secret" => $this->apiSecret,
+            "refresh_token" => $refresh,
+            "grant_type" => "refresh_token" 
+        );
+        $response = $this->make_request(OAUTH_ENDPOINT_TOKEN, RequestMethods::Post, $values);
+        if(isset($response->error)){
+            throw new SWCombineWSException("failed to update token. Reson: ". $response->error, $response->error);
+        }
+        $this->token = new OAuthToken($response->expires_in, $response->access_token, isset($response->refresh_token) ? $response->refresh_token : null);
+        return $this->token;
+    }
+    
     public function get_token(){
         return $this->token;
     }
@@ -126,6 +141,10 @@ class SWC extends DBHandler {
             //you should really log this
             return null;
         }
+    }
+
+    public function set_token($token){
+        $this->token = $token;
     }
 
     public function __construct() {

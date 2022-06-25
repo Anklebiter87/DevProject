@@ -49,6 +49,10 @@ class Users extends DBHandler{
         return True;
     }
 
+    public function build_user_from_database($uid){
+        $this->query_for_user_by_uid($uid);
+    }
+
     public function query_for_user_by_uid(int $uid = -1){
         $query = "SELECT * FROM $this->tableName WHERE uid = ?";
         if($uid > -1){
