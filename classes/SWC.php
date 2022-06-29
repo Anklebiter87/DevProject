@@ -138,7 +138,21 @@ class SWC extends DBHandler {
             return $data;
         }
         catch(SWCombineWSException $e){
-            //you should really log this
+            //you should really log this correctly
+            Debug::error_log_print($e);
+            return null;
+        }
+    }
+
+    public function get_time(){
+        $url = "https://www.swcombine.com/ws/v2.0/api/time/";
+        $values = array();
+        try{
+            $data = $this->make_request($url, "GET", $values);
+            return $data;
+        }
+        catch(SWCombineWSException $e){
+            Debug::error_log_print($e);
             return null;
         }
     }
