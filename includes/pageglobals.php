@@ -23,13 +23,13 @@ if(array_key_exists("gamblinguid", $_SESSION)){
             if($info != null){
                 $token->record_token($user->get_uid());
                 $swctime = $info->timestamp;
-                $message = "Token refreshed from $address for $name";
+                $message = "Token refreshed for $name";
                 new_log($user, $message, $address, $swctime);
             }
             else{
                 $rawJson = $swc->get_time();
                 $swctime = $rawJson->timestamp;
-                $message = "Failed to refresh token after refresh from $address for $name";
+                $message = "Failed to refresh token after refresh for $name";
                 new_log($user, $message, $address, $swctime);
                 session_destroy();
                 header("Location: login.php");
@@ -38,20 +38,19 @@ if(array_key_exists("gamblinguid", $_SESSION)){
         else{
             $rawJson = $swc->get_time();
             $swctime = $rawJson->timestamp;
-            $message = "No refresh token from $address for $name";
+            $message = "No refresh token for $name";
             new_log($user, $message, $address, $swctime);
             session_destroy();
             header("Location: login.php");
         }
     }
     else{
-        echo "token expired";
         $swc->set_token($token);
         $info = $swc->check_authentication(); 
         if($info == null){
             $rawJson = $swc->get_time();
             $swctime = $rawJson->timestamp;
-            $message = "No longer to access resources with token from $address for $name";
+            $message = "No longer able to access resources with token for $name";
             new_log($user, $message, $address, $swctime);
             session_destroy();
             header("Location: login.php");
