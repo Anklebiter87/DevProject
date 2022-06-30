@@ -6,10 +6,8 @@ function new_log($user, $message, $address, $swctime){
     $log->create_log($swctime, $user->get_uid(), $address, $message);
 }
 
-
-if(array_key_exists("gamblinguid", $_SESSION)){
+if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken", $_SESSION)){
     $user = new Users();
-    
     $user->build_user_from_database((int)$_SESSION['gamblinguid']);
     $swc = new SWC();
     Debug::error_log_print($swc->get_time());
@@ -58,6 +56,7 @@ if(array_key_exists("gamblinguid", $_SESSION)){
     }
 }
 else{
+    Debug::error_log_print("Lost session cookies");
     header("Location: login.php");
 }
 

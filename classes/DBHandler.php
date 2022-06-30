@@ -83,6 +83,10 @@ class DBHandler {
                 $query .= " AUTO_INCREMENT";
             }
         }
+        if(array_key_exists('default', $jsonData[$key])){
+            $value = $jsonData[$key]["default"];
+            $query .= " DEFAULT $value";
+        }
         return $query . ", ";
     }
 

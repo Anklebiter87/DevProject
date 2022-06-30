@@ -12,7 +12,7 @@ require_once 'includes/pageglobals.php';
     <?php
     require_once 'includes/head.php';
     ?>
-    <script src="pazaak/static/js/gambling/utils.js"></script>
+    <script src="static/js/gambling/utils.js"></script>
     <script>
         function hider(id) {
             var elements = document.getElementById("decks-continer").querySelectorAll("#" + id);
@@ -86,7 +86,9 @@ require_once 'includes/pageglobals.php';
                         <br>
                         <p>Because the house needs to keep the lights on, every game you play will cost
                             50,000 credits.
-                            All credit lines will bottom out at {{limit|intcomma}} and once you reach that
+                            All credit lines will bottom out at 
+                            <?php echo number_format($user->get_gambling_limit());?>
+                            and once you reach that
                             limit you will
                             not be able to play anymore.
                             So, pay your bills and enjoy yoursef.
@@ -106,25 +108,31 @@ require_once 'includes/pageglobals.php';
                                     <div class="col-12 col-sm-9">
                                         <div class="row" style="padding:0px">
                                             <p style="margin: 8px;">&nbsp;&nbsp;Credit Line:&nbsp;</p>
-                                            {%if debt <= limit%}
+                                            <?php
+                                            if($user->get_gambling_debt() <= $user->get_gambling_limit()){
+                                                ?>
                                             <a href="{% url 'gambling:creditline-deposit'%}">
                                                 <button type="button" class="btn btn-sm btn-danger">
-                                                    {{debt|intcomma}}
+                                                    <?php echo number_format($user->get_gambling_debt());?>
                                                 </button></a>
                                             <p style="color:red">
-                                                {% elif debt > limit and debt < 0%}
+                                            <?php
+                                            }
+                                            elseif($user->get_gambling_debt() > $user->get_gambling_limit() && $user->get_gambling_debt() < 0){
+                                            ?>
                                                 <a href="{% url 'gambling:creditline-deposit'%}">
                                                     <button type="button" class="btn btn-sm btn-warning">
-                                                        {{debt|intcomma}}
+                                                        <?php echo number_format($user->get_gambling_debt());?>
                                                     </button></a>
-                                                {%else%}
+                                            <?php
+                                            }
+                                            else{
+                                                ?>
                                                 <a href="{% url 'gambling:creditline-deposit'%}">
                                                     <button type="button" class="btn btn-sm btn-secondary">
-                                                        {{debt|intcomma}}
+                                                        <?php echo number_format($user->get_gambling_debt());?>
                                                     </button></a>
-                                                {%endif%}
-                                                {%if debt < 0%}
-                                                {%endif%}
+                                            <?php }?>
                                         </div>
                                         <p>Total Games Played: {{totalGames|intcomma}}</p>
                                     </div>
@@ -143,6 +151,9 @@ require_once 'includes/pageglobals.php';
             </div>
             <div class='card-body'>
                 <div class="row">
+                    <?php
+
+                    ?>
                     {%if pgames %}
                     {%for game in pgames %}
                     <div class="col-12 col-sm-6 col-lg-4">

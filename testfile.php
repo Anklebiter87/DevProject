@@ -6,6 +6,3 @@
     $logger = new Logger();
     $swc = new SWC();
     $token = new OAuthToken(null, null, null, 1201991);
-    $token = $swc->refresh_token($token->get_refresh_token()); 
-    $token->record_token($user->get_uid());
-    

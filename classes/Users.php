@@ -6,6 +6,8 @@ class Users extends DBHandler{
     protected $tableName = "Users";
     private $characterName;
     private $uid;
+    private $gamblingLimit;
+    private $gamblingDebt;
     private $jsonObj;
     
     private function process_character_info(){
@@ -26,6 +28,17 @@ class Users extends DBHandler{
         }
     }
 
+    private function set_values($result){
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        foreach($data as $row){
+            $this->characterName = $row['characterName'];
+            $this->uid = $row['uid'];
+            $this->gamblingLimit = $row['gamblingLimit'];
+            $this->gamblingDebt = $row['gamblingDebt'];
+        }
+
+    }
+
     public function query_for_user_by_name(string $characterName = null){
         $query = "SELECT * FROM $this->tableName WHERE characterName like ?";
         if($characterName != null){
@@ -41,12 +54,17 @@ class Users extends DBHandler{
         if ($result->num_rows == 0){
             return False;
         }
-        $data = $result->fetch_all(MYSQLI_ASSOC);
-        foreach($data as $row){
-            $this->characterName = $row['characterName'];
-            $this->uid = $row['uid'];
-        }
+        $this->set_values($result);
+        $this->gamblingLimit = 200;
         return True;
+    }
+
+    public function get_gambling_debt(){
+        return $this->gamblingDebt;
+    }
+
+    public function get_gambling_limit(){
+        return $this->gamblingLimit;
     }
 
     public function build_user_from_database($uid){
@@ -65,11 +83,7 @@ class Users extends DBHandler{
         if ($result->num_rows == 0){
             return False;
         }
-        $data = $result->fetch_all(MYSQLI_ASSOC);
-        foreach($data as $row){
-            $this->characterName = $row['characterName'];
-            $this->uid = $row['uid'];
-        }
+        $this->set_values($result);
         return True;
     }
 
