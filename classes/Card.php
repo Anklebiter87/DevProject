@@ -10,14 +10,13 @@ class Card extends DBHandler{
     private $generated;
     private $deck;
     private $owner;
-    private $imagePath;
 
     public function get_uid(){
         return $this->uid;
     }
 
     public function get_image_path(){
-        return $this->imagePath;
+        return $this->cardType->get_image_path();
     }
 
     public function get_card_type(){

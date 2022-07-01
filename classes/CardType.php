@@ -10,6 +10,7 @@ class CardType extends DBHandler{
     private $actions;
     private $admin;
     private $special;
+    private $image;
 
     public function get_pk(){
         return $this->pk;
@@ -42,6 +43,14 @@ class CardType extends DBHandler{
         return $this->admin;
     }
 
+    public function is_special_card(){
+        return $this->special;
+    }
+
+    public function get_image_path(){
+        return $this->image;
+    }
+
     private function populate(){
         $query = "SELECT * from CardType WHERE pk = ?;";
         $values = array($this->pk);
@@ -56,6 +65,7 @@ class CardType extends DBHandler{
                 }
                 $this->admin = $row['admin'];
                 $this->special = $row['special'];
+                $this->image = $row['image'];
             }
         }
     }

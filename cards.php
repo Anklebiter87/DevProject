@@ -32,6 +32,7 @@ card_check($user);
         }
     </script>
 </head>
+<div class='card'>
 <div class='card-header'>
         <div class="col-12 col-sm-12">
             <ul class="nav nav-tabs">

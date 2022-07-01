@@ -1,11 +1,14 @@
 <?php
 
 define("ACTIONS", [1,2,3,4,5,6,7,8,9]);
+define("POSIMAGE", "/pazaak/static/img/positiveCard.png");
+define("NEGIMAGE", "/pazaak/static/img/negitiveCard.png");
+define("POSNEGIMAGE", "/pazaak/static/img/posNegCard.png");
 
-function add_action($db, $name, $admin, $action, $special=False){
-    $query = "INSERT INTO CardType (name, admin, actions, special) VALUES (?, ?, ?, ?);";
-    $values = array($name, $admin, $action, $special);
-    $types = array("sisi");
+function add_to_db($db, $name, $admin, $action, $image, $special=False){
+    $query = "INSERT INTO CardType (name, admin, actions, image, special) VALUES (?, ?, ?, ?, ?);";
+    $values = array($name, $admin, $action, $image, $special);
+    $types = array("sissi");
     return $db->execute_query($query, $values, $types);
 }
 
@@ -42,11 +45,11 @@ function populate_card_types(){
             $minusAction = json_encode([$action*-1]);
             $specialAction = json_encode([$action, $action*-1]);
             if($action > 6){
-                add_action($db, $plusName, True, $plusAction);
+                add_to_db($db, $plusName, True, $plusAction, POSIMAGE);
             }else{
-                add_action($db, $plusName, False, $plusAction);
-                add_action($db, $minusName, False, $minusAction);
-                add_action($db, $specialName, False, $specialAction, True);
+                add_to_db($db, $plusName, False, $plusAction, POSIMAGE);
+                add_to_db($db, $minusName, False, $minusAction, NEGIMAGE);
+                add_to_db($db, $specialName, False, $specialAction, POSNEGIMAGE, True);
             }
         }
     }
