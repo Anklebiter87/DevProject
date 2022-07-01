@@ -10,7 +10,6 @@ if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken
     $user = new Users();
     $user->build_user_from_database((int)$_SESSION['gamblinguid']);
     $swc = new SWC();
-    Debug::error_log_print($swc->get_time());
     $token = new OAuthToken(null, null, null, $user->get_uid());
     $name = $user->get_character_name();
     $address = $_SERVER["REMOTE_ADDR"];

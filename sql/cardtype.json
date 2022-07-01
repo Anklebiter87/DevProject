@@ -1,0 +1,8 @@
+{
+    "pk": {"type": "int", "null": false, "autoincrement": true},
+    "name": {"type": "varchar", "length": 50, "null": false},
+    "admin": {"type": "BOOLEAN", "null": false},
+    "special": {"type": "BOOLEAN", "null": false},
+    "actions": {"type": "varchar", "length": 50, "null": false},
+    "options": {"options": ["PRIMARY KEY (pk)"]}
+}

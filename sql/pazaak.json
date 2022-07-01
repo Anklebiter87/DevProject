@@ -1,0 +1,11 @@
+{
+    "pk": {"type": "int", "null": false, "autoincrement": true},
+    "name": {"type": "varchar", "length": 500},
+    "timestamp": {"type": "int", "null": false},
+    "swctime": {"type": "int", "null": false},
+    "playerOne": {"type": "int", "null": false},
+    "playerTwo": {"type": "int", "null": true},
+    "options": {"options": ["PRIMARY KEY (pk)", 
+                            "FOREIGN KEY (playerOne) REFERENCES PazzakPlayer(pk)",
+                            "FOREIGN KEY (playerTwo) REFERENCES PazzakPlayer(pk)"]}
+}

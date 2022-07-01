@@ -101,6 +101,7 @@ class DBHandler {
         }
         $query = rtrim($query, ", ");
         $query .= ");";
+        echo $query."\n";
         $this->execute_query($query, array(), array());
     }
 
@@ -162,7 +163,11 @@ class DBHandler {
         $this->check_schema();
     }
 
-    protected function execute_query(string $query, array $argv, array $argvTypes){
+    public function get_last_insert_id(){
+        return $this->conn-> insert_id;
+    }
+
+    public function execute_query(string $query, array $argv, array $argvTypes){
         if(!isset($this->conn)){
             $this->connect();
         }
@@ -175,7 +180,11 @@ class DBHandler {
             $stmt->bind_param(implode("",$argvTypes), ...$argv);
         }
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        if($result == False){
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        }
+        return $result;
     }
 
     private function connect(){

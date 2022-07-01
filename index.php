@@ -41,25 +41,25 @@ require_once 'includes/pageglobals.php';
                         </button></a>
                 </li>
                 <li class="nav-item justify-content-center border">
-                    <a href="{% url 'gambling:pazaak-decks' %}">
+                    <a href="decks.php">
                         <button type="button" class="btn btn-sm btn-secondary">
                             Decks
                         </button></a>
                 </li>
                 <li class="nav-item justify-content-center border">
-                    <a href="{% url 'gambling:pazaak-cards' %}">
+                    <a href="cards.php">
                         <button type="button" class="btn btn-sm btn-secondary">
                             Cards
                         </button></a>
                 </li>
                 <li class="nav-item justify-content-center border">
-                    <a href="{% url 'gambling:pazaak-creategame' %}">
+                    <a href="creategame.php">
                         <button type="button" class="btn btn-sm btn-secondary">
                             Create Game
                         </button></a>
                 </li>
                 <li class="nav-item justify-content-center border">
-                    <a href="{% url 'gambling:stats' %}">
+                    <a href="stats.php">
                         <button type="button" class="btn btn-sm btn-secondary">
                             Gambling Stats
                         </button></a>
@@ -111,7 +111,7 @@ require_once 'includes/pageglobals.php';
                                             <?php
                                             if($user->get_gambling_debt() <= $user->get_gambling_limit()){
                                                 ?>
-                                            <a href="{% url 'gambling:creditline-deposit'%}">
+                                            <a href="deposit.php">
                                                 <button type="button" class="btn btn-sm btn-danger">
                                                     <?php echo number_format($user->get_gambling_debt());?>
                                                 </button></a>
@@ -120,7 +120,7 @@ require_once 'includes/pageglobals.php';
                                             }
                                             elseif($user->get_gambling_debt() > $user->get_gambling_limit() && $user->get_gambling_debt() < 0){
                                             ?>
-                                                <a href="{% url 'gambling:creditline-deposit'%}">
+                                                <a href="deposit.php">
                                                     <button type="button" class="btn btn-sm btn-warning">
                                                         <?php echo number_format($user->get_gambling_debt());?>
                                                     </button></a>
@@ -128,7 +128,7 @@ require_once 'includes/pageglobals.php';
                                             }
                                             else{
                                                 ?>
-                                                <a href="{% url 'gambling:creditline-deposit'%}">
+                                                <a href="deposit.php">
                                                     <button type="button" class="btn btn-sm btn-secondary">
                                                         <?php echo number_format($user->get_gambling_debt());?>
                                                     </button></a>

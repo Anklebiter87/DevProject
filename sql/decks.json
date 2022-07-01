@@ -1,0 +1,8 @@
+{
+    "pk": {"type": "int", "null": false, "autoincrement": true},
+    "name": {"type": "varchar", "length": 200, "null": false},
+    "characterId": {"type": "int", "null": false},
+    "options": {"options": ["PRIMARY KEY (pk)",
+                            "FOREIGN KEY (characterId) REFERENCES Users(uid)"
+                            ]}
+}
