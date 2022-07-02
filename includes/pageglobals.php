@@ -6,6 +6,7 @@ function new_log($user, $message, $address, $swctime){
     $log->create_log($swctime, $user->get_uid(), $address, $message);
 }
 
+
 if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken", $_SESSION)){
     $user = new Users();
     $user->build_user_from_database((int)$_SESSION['gamblinguid']);
@@ -30,6 +31,7 @@ if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken
                 new_log($user, $message, $address, $swctime);
                 session_destroy();
                 header("Location: login.php");
+                exit();
             }
         }
         else{
@@ -39,6 +41,7 @@ if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken
             new_log($user, $message, $address, $swctime);
             session_destroy();
             header("Location: login.php");
+            exit();
         }
     }
     else{
@@ -51,11 +54,14 @@ if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken
             new_log($user, $message, $address, $swctime);
             session_destroy();
             header("Location: login.php");
+            exit();
         }
     }
 }
 else{
+    $user = null;
     header("Location: login.php");
+    exit();
 }
 
 
