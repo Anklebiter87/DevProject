@@ -5,7 +5,12 @@
     "swctime": {"type": "int", "null": false},
     "playerOne": {"type": "int", "null": false},
     "playerTwo": {"type": "int", "null": true},
+    "winner": {"type": "int", "null": true},
+    "rounds": {"type": "int", "null": true},
+    "watchable": {"type": "BOOLEAN", "null": false},
+    "joinable": {"type": "BOOLEAN", "null": false},
+    "ready": {"type": "BOOLEAN", "null": false},
     "options": {"options": ["PRIMARY KEY (pk)", 
-                            "FOREIGN KEY (playerOne) REFERENCES PazzakPlayer(pk)",
-                            "FOREIGN KEY (playerTwo) REFERENCES PazzakPlayer(pk)"]}
+                            "FOREIGN KEY (playerOne) REFERENCES Player(pk)",
+                            "FOREIGN KEY (playerTwo) REFERENCES Player(pk)"]}
 }

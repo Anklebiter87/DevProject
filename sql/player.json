@@ -1,9 +1,10 @@
 {
     "pk": {"type": "int", "null": false, "autoincrement": true},
-    "character": {"type": "int", "null": false},
+    "characterId": {"type": "int", "null": false},
     "deck": {"type": "int", "null": true},
     "hand": {"type": "varchar", "length": 32, "null": true},
+    "wins": {"type": "int", "null": false},
     "options": {"options": ["PRIMARY KEY (pk)", 
-                            "FOREIGN KEY (character) REFERENCES Users(uid)",
+                            "FOREIGN KEY (characterId) REFERENCES Users(uid)",
                             "FOREIGN KEY (deck) REFERENCES Deck(pk)"]}
 }

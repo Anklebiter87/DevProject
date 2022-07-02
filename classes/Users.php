@@ -8,7 +8,12 @@ class Users extends DBHandler{
     private $uid;
     private $gamblingLimit;
     private $gamblingDebt;
+    private $defaultDeck;
     private $jsonObj;
+
+    public function get_default_deck(){
+        return $this->defaultDeck;
+    }
     
     private function process_character_info(){
         $swcapi = $this->jsonObj->swcapi;
@@ -35,8 +40,8 @@ class Users extends DBHandler{
             $this->uid = $row['uid'];
             $this->gamblingLimit = $row['gamblingLimit'];
             $this->gamblingDebt = $row['gamblingDebt'];
+            $this->defaultDeck = $row['defaultDeck'];
         }
-
     }
 
     public function query_for_user_by_name(string $characterName = null){

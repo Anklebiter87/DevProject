@@ -28,7 +28,6 @@ function card_check($user){
     if($results->num_rows < 10){
         generate_cards($user, $results->num_rows);
     } 
-    
 }
 
 function get_deck($card){

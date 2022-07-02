@@ -11,3 +11,5 @@
     populate_card_types();
     $deck = new Deck();
     $card = new Card();
+    $player = new Player($user);
+    $game = new Pazaak();

@@ -1,5 +1,7 @@
 <?php
-require_once "include/baseinclude.php"
+require_once "includes/baseincludes.php";
+require_once "includes/games.php";
+$games = new Games($user);
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -148,38 +150,45 @@ require_once "include/baseinclude.php"
             <div class='card-body'>
                 <div class="row">
                     <?php
+                    $counter = 0;
+                    if($games->get_playable_games_count() > 0){
 
+                    foreach($games->get_playable_games() as $game){
+                        $player1 = $game->get_player1();
+                        $player2 = $game->get_player2();
                     ?>
-                    {%if pgames %}
-                    {%for game in pgames %}
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card border border-darker">
-                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-game-{{forloop.counter}}" aria-expanded="false" aria-controls="collapse-game-{{forloop.counter}}" onclick="hider('collapse-game-{{forloop.counter}}-hidden')">
+                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target=<?php echo "#collapse-game-$counter";?> aria-expanded="false" aria-controls=<?php echo "collapse-game-$counter";?> onclick=<?php echo "hider('collapse-game-$counter-hidden')";?>>
                                 <div class="card-header">
                                     <u>
-                                        <h3>Name: {{game.name}}</h3>
+                                        <h3>Name: <?php echo $game->get_name()?></h3>
                                     </u>
-                                    <div style="display:block" id="collapse-game-{{forloop.counter}}-hidden">
+                                    <div style="display:block" id=<?php echo "collapse-game-$counter-hidden"?>>
                                         <div class="row">
                                             <div class="col-12 col-sm-6">
-                                                <h4>Player 1: {{game.player1}}</h4>
+                                                <h4>Player 1: <?php echo $player1->get_name();?></h4>
                                             </div>
                                             <div class="col-12 col-sm-6">
-                                                {%if game.player2 %}
-                                                <h4>Player 2: {{game.player2}}</h4>
-                                                {%else%}
-                                                {%if game.joinable%}
-                                                <h4>Player 2: Waiting for Player 2</h4>
-                                                {%else%}
-                                                <h4>Player 2: None</h4>
-                                                {%endif%}
-                                                {%endif%}
+                                                <?php 
+                                                if($player2 != null){
+                                                    echo "<h4>Player 2: ".$player2->get_name()."</h4>";
+                                                }
+                                                else{
+                                                    if($game->get_joinable()){
+                                                        echo "<h4>Player 2: Waiting for Player 2</h4>";
+                                                    }
+                                                    else{
+                                                        echo "<h4>Player2: None</h4>";
+                                                    }
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </button>
-                            <div id="collapse-game-{{forloop.counter}}" class="collapse" aria-labelledby="headingOne">
+                            <div id=<?php echo "collapse-game-$counter"?> class="collapse" aria-labelledby="headingOne">
                                 <div class="card-body">
                                     <div class="col-12 col-sm-12">
                                         <div class="card border border-darker">
@@ -189,29 +198,33 @@ require_once "include/baseinclude.php"
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <h4>Player 1: {{game.player1}}</h4>
+                                                        <h4>Player 1: <?php echo $player1->get_name()?></h4>
                                                     </div>
                                                     <div class="col-12 justify-content-center">
-                                                        <h5>Wins: {{game.player1.wins}}</h5>
+                                                        <h5>Wins: <?php echo $player1->get_wins()?></h5>
                                                     </div>
                                                     <div class="col-12">
-                                                        {%if game.player2 %}
-                                                        <h4>Player 2: {{game.player2}}</h4>
-                                                        {%else%}
-                                                        {%if game.owner %}
-                                                        <p>Player 2 has not joined yet. Use the link to get a game
-                                                            link
-                                                            for another player</p>
-                                                        {%else%}
-                                                        <p>Needs another player.</p>
-                                                        {%endif%}
-                                                        {%endif%}
+                                                        <?php
+                                                        if($player2 != null){
+                                                            echo "<h4>Player 2: ".$player2->get_name()."</h4>";
+                                                        }
+                                                        else{
+                                                            if($game->is_owner($user)){
+                                                                echo "<p>Player 2 has not joined yet. Use the link to get a game link for another player</p>";
+                                                            }
+                                                            else{
+                                                                echo "<p>Be the first to join! Use the button to get a game link to join.</p>";
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
-                                                    {%if game.player2%}
-                                                    <div class="col-12 justify-content-center">
-                                                        <h5>Wins: {{game.player2.wins}}</h5>
+                                                    <?php
+                                                    if($player2 != null){
+                                                        echo "<div class='col-12 justify-content-center'>
+                                                            <h5>Wins: ".$player2->get_wins()."</h5>";
+                                                    }
+                                                    ?>
                                                     </div>
-                                                    {%endif%}
                                                 </div>
                                             </div>
                                         </div>
@@ -220,24 +233,23 @@ require_once "include/baseinclude.php"
                                                 <h4>State:</h4>
                                             </div>
                                             <div class="card-body">
-                                                {%if not game.active %}
-                                                <p>{{game.ready_to_start}}</p>
-                                                {%else%}
-                                                {%if game.ready%}
-                                                {%if game.winner%}
-                                                <p>{{game.winner}} won the last round</p>
-                                                {%else%}
-                                                {%if game.player1Joined and game.player2Joined%}
-                                                <p>Current game is playing</p>
-                                                {%else%}
-                                                <p>Nobody is playing</p>
-                                                {%endif%}
-                                                {%endif%}
-                                                {%else%}
-                                                <p>Game has not started</p>
-                                                {%endif%}
-                                                {%endif%}
-                                                <p>Rounds Played: {{game.round}}</p>
+                                                <?php
+                                                echo "<p>";
+                                                if($game->get_state() == "needPlayer2"){
+                                                    echo "Waiting for Player 2";
+                                                }
+                                                elseif ($game->get_state() == "inProgress"){
+                                                    echo "Current game is playing";
+                                                }
+                                                elseif ($game->get_state() == "finished"){
+                                                    if($game->get_winner() != null){
+                                                        echo $game->get_winner()->get_name(). "won the last round";
+                                                    }
+                                                }
+                                                echo "</p>";
+                                                echo "<p>Rounds Played: ". $game->get_rounds(). "</p>";
+                                                ?>
+                                                
                                             </div>
                                         </div>
                                         <div class="card border border-darker">
@@ -247,38 +259,45 @@ require_once "include/baseinclude.php"
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-3 col-sm-3">
-                                                        {%if game.ready %}
-                                                        <a href="{% url 'gambling:pazaak-playgame' game.pk %}">
-                                                            <button type="button" class="btn btn-sm btn-secondary" title="Play Pazaak">
-                                                                <i class="tim-icons icon-controller"></i>
+                                                        <?php
+                                                        if($game->get_state() == "ready"){
+                                                            echo "<a href=pazaak/play?game=$game->get_pk()>
+                                                            <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Play Pazaak\">
+                                                                <i class=\"tim-icons icon-controller\"></i>
                                                             </button>
-                                                        </a>
-                                                        {%else%}
-                                                        <a href="{% url 'gambling:pazaak-gamesetup' game.pk %}">
-                                                            <button type="button" class="btn btn-sm btn-secondary" title="Setup Pazaak">
-                                                                <i class="tim-icons icon-settings-gear-63"></i>
-                                                            </button></a>
-                                                        {%endif%}
+                                                        </a>";
+                                                        }
+                                                        else{
+                                                            echo "<a href=pazaak/setup?game=$game->get_pk()>
+                                                            <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Setup Pazaak\">
+                                                                <i class=\"tim-icons icon-settings-gear-63\"></i>
+                                                            </button></a>";
+                                                        }
+                                                        ?>
                                                     </div>
                                                     <div class="col-3 col-sm-3">
-                                                        {%if game.owner %}
-                                                        <a href="{% url 'gambling:pazaak-deletegame' game.pk %}">
-                                                            <button type="button" class="btn btn-sm btn-secondary" title="Delete Game">
-                                                                <i class="tim-icons icon-trash-simple"></i>
-                                                            </button>
-                                                        </a>
-                                                        {%endif%}
+                                                        <?php 
+                                                        if($game->is_owner){
+                                                            echo "<a href=pazaak/delete?game=$game->get_pk()>
+                                                            <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Delete Pazaak\">
+                                                                <i class=\"tim-icons icon-simple-remove\"></i>
+                                                            </button></a>";
+                                                        }
+                                                        ?>
                                                     </div>
                                                     <div class="col-12 col-sm-12">
-                                                        {%if game.player2 == None%}
-                                                        {%if game.owner %}
-                                                        <button type="button" id="GameButton" class="btn btn-sm btn-secondary" onclick="CopyGameLink()" value="{{baseUrl}}{{game.get_game_link}}">
-                                                            Copy opponent link
-                                                        </button>
-                                                        {%else%}
-                                                        <p>Needs another player.</p>
-                                                        {%endif%}
-                                                        {%endif%}
+                                                        <?php
+                                                        if($player2 == null){
+                                                            if($game->is_owner($user)){
+                                                                echo "<button type=\"button\" id=\"GameButton\" class=\"btn btn-sm btn-secondary\" onclick=\"CopyGameLink()\" value=\"{{baseUrl}}{{game.get_game_link}}\">
+                                                                    Copy opponent link
+                                                                    </button>";
+                                                            }
+                                                            else{
+                                                                echo "<p>Needs another player.</p>";
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -287,53 +306,63 @@ require_once "include/baseinclude.php"
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <div class="col-12 col-sm-12" id="collapse-game-{{forloop.counter}}-hidden" style="display:block">
+                                <div class="col-12 col-sm-12" id=<?php echo "collapse-game-$counter-hidden"?> style="display:block">
                                     <div class="row">
                                         <div class="col-3 col-sm-3">
-                                            {%if game.ready %}
-                                            <a href="{% url 'gambling:pazaak-playgame' game.pk %}">
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Play Pazaak">
-                                                    <i class="tim-icons icon-controller"></i>
-                                                </button>
-                                            </a>
-                                            {%else%}
-                                            <a href="{% url 'gambling:pazaak-gamesetup' game.pk %}">
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Setup Pazaak">
-                                                    <i class="tim-icons icon-settings-gear-63"></i>
-                                                </button></a>
-                                            {%endif%}
+                                            <?php
+                                            if($game->get_state() == "ready"){
+                                                echo "<a href=pazaak/play?game=$game->get_pk()>";
+                                                echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Play Pazaak\">";
+                                                echo "<i class=\"tim-icons icon-controller\"></i>";
+                                                echo "</button></a>";
+                                            }
+                                            else{
+                                                echo "<a href=pazaak/setup?game=$game->get_pk()>";
+                                                echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Setup Pazaak\">";
+                                                echo "<i class=\"tim-icons icon-settings-gear-63\"></i>";
+                                                echo "</button></a>";
+                                            }
+                                            ?>
                                         </div>
                                         <div class="col-3 col-sm-3">
-                                            {%if game.owner %}
-                                            <a href="{% url 'gambling:pazaak-deletegame' game.pk %}">
-                                                <button type="button" class="btn btn-sm btn-secondary" title="Delete Game">
-                                                    <i class="tim-icons icon-trash-simple"></i>
-                                                </button>
-                                            </a>
-                                            {%endif%}
+                                            <?php
+                                            if($game->is_owner($user)){
+                                                echo "<a href=pazaak/delete?deck=$game->get_pk()>";
+                                                echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Delete Game\">";
+                                                echo "<i class=\"tim-icons icon-trash-simple\"></i>";
+                                                echo "</button></a>";
+                                            }
+                                            ?>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-6">
-                                            {%if game.player2 == None%}
-                                            {%if game.owner %}
-                                            <button type="button" id="GameButton" class="btn btn-sm btn-secondary" onclick="CopyGameLink()" value="{{baseUrl}}{{game.get_game_link}}">
-                                                Copy opponent link
-                                            </button>
-                                            {%else%}
-                                            <p>Needs another player.</p>
-                                            {%endif%}
-                                            {%endif%}
+                                            <?php
+                                            if($player2 == null){
+                                                if($game->is_owner($user)){
+                                                    echo "<button type=\"button\" id=\"GameButton\" class=\"btn btn-sm btn-secondary\" onclick=\"CopyGameLink()\" value=\"{{baseUrl}}{{game.get_game_link}}\">
+                                                        Copy opponent link
+                                                        </button>";
+                                                }
+                                                else{
+                                                    echo "<p>Needs another player.</p>";
+                                                }
+                                            }
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {%endfor%}
-                    {%else%}
-                    <div class="col-12 col-sm-12">
+                    <?php
+                $counter++;
+                }
+            }
+            else{
+                echo "<div class=\"col-12 col-sm-12\">
                         <h4>No games are currently available for you to play.</h4>
-                    </div>
-                    {%endif%}
+                    </div>";
+            }
+                    ?>
                 </div>
             </div>
         </div>
@@ -345,32 +374,41 @@ require_once "include/baseinclude.php"
             </div>
             <div class='card-body' id="decks-continer">
                 <div class="row">
-                    {%if wgames %}
-                    {%for game in wgames %}
+                    <?php
+                    $counter = 0;
+                    
+                    if($games->get_watchable_games_count() > 0){
+                        foreach($games->get_watchable_games() as $game){
+                            $player1 = $game->get_player1();
+                            $player2 = $game->get_player2();
+                    ?>
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card border border-darker">
-                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-watch-{{forloop.counter}}" aria-expanded="false" aria-controls="collapse-watch-{{forloop.counter}}" onclick="hider('collapse-watch-{{forloop.counter}}-hidden')">
+                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target=<?php echo "#collapse-watch-$counter"?> aria-expanded="false" aria-controls=<?php echo "collapse-watch-$counter"?> onclick=<?php echo "hider('collapse-watch-$counter-hidden')"?>>
                                 <div class="card-header">
                                     <u>
-                                        <h3>Name: {{game.name}}</h3>
+                                        <h3>Name: <?php echo $game->get_name();?></h3>
                                     </u>
-                                    <div style="display:block" id="collapse-game-{{forloop.counter}}-hidden">
+                                    <div style="display:block" id=<?php echo "collapse-game-$counter-hidden"?>>
                                         <div class="row">
                                             <div class="col-12 col-sm-6">
-                                                <h4>Player 1: {{game.player1}}</h4>
+                                                <h4>Player 1: <?php echo $player1->get_player_name()?></h4>
                                             </div>
                                             <div class="col-12 col-sm-6">
-                                                {%if game.player2 %}
-                                                <h4>Player 2: {{game.player2}}</h4>
-                                                {%else%}
-                                                <h4>Player 2: None</h4>
-                                                {%endif%}
+                                                <?php
+                                                if($player2 != null){
+                                                    echo "<h4>Player 2: ".$player2->get_player_name()."</h4>";
+                                                }
+                                                else{
+                                                    echo "<h4>Player 2: Waiting for player 2</h4>";
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </button>
-                            <div id="collapse-watch-{{forloop.counter}}" class="collapse" aria-labelledby="headingOne">
+                            <div id=<?php echo "collapse-watch-$counter"?> class="collapse" aria-labelledby="headingOne">
                                 <div class="card-body">
                                     <div class="col-12 col-sm-12">
                                         <div class="card border border-darker">
@@ -380,32 +418,39 @@ require_once "include/baseinclude.php"
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <h4>Player 1: {{game.player1}}</h4>
+                                                        <h4>Player 1: <?php echo $player1->get_player_name()?></h4>
                                                     </div>
                                                     <div class="col-12 justify-content-center">
-                                                        <h5>Wins: {{game.player1.wins}}</h5>
+                                                        <h5>Wins: <?php echo $player1->get_wins()?></h5>
                                                     </div>
                                                     <div class="col-12">
-                                                        {%if game.player2%}
-                                                        <h4>Player 2: {{game.player2}}</h4>
-                                                        {%else%}
-                                                        {%if game.joinable%}
-                                                        <h4>Player 2:
-                                                            <a href="{{game.get_game_link}}">
-                                                                <button type="button" class="btn btn-sm btn-secondary">
+                                                        <?php
+                                                        if($player2 != null){
+                                                            echo "<h4>Player 2: ".$player2->get_player_name()."</h4>";
+                                                        }
+                                                        else{
+                                                            if($game->is_joinable()){
+
+
+                                                            echo "<a href=\"{{game.get_game_link}}\">
+                                                                  <button type=\"button\" class=\"btn btn-sm btn-secondary\">
                                                                     Click to join game
-                                                                </button></a>
-                                                        </h4>
-                                                        {%else%}
-                                                        <h5>Needs another player.</h5>
-                                                        {%endif%}
-                                                        {%endif%}
+                                                                   </button></a>
+                                                                   </h4>";
+                                                            }
+                                                            else{
+                                                                echo "<h5>Needs another player.</h5>";
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
-                                                    {%if game.player2%}
-                                                    <div class="col-12 justify-content-center">
-                                                        <h5>Wins: {{game.player2.wins}}</h5>
-                                                    </div>
-                                                    {%endif%}
+                                                    <?php
+                                                    if($player2 != null){
+                                                        echo "<div class=\"col-12 justify-content-center\">
+                                                        <h5>Wins: $player2->get_wins()</h5>
+                                                        </div>";
+                                                    }
+                                                    ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -456,7 +501,7 @@ require_once "include/baseinclude.php"
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <div class="col-12 col-sm-12 center" id="collapse-watch-{{forloop.counter}}-hidden" style="display:block">
+                                <div class="col-12 col-sm-12 center" id=<?php echo "collapse-watch-$counter-hidden"?> style="display:block">
                                     {%if game.ready %}
                                     <a href="{% url 'gambling:pazaak-playgame' game.pk %}">
                                         <button type="button" class="btn btn-sm btn-secondary" title="Watch Pazaak">
@@ -480,12 +525,16 @@ require_once "include/baseinclude.php"
                             </div>
                         </div>
                     </div>
-                    {%endfor%}
-                    {%else%}
-                    <div class="col-12 col-sm-12">
+                    <?php
+                    $counter++;
+                }
+            }
+            else{
+                echo "<div class=\"col-12 col-sm-12\">
                         <h4>No games are currently available to watch.</h4>
-                    </div>
-                    {%endif%}
+                    </div>";
+            }
+            ?>
                 </div>
             </div>
         </div>

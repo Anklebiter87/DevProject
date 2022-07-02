@@ -3,5 +3,6 @@
     "characterName": {"type": "varchar", "length": 255, "null": false},
     "gamblingLimit": {"type": "int", "default": -2000000},
     "gamblingDebt": {"type": "int", "default": 0},
+    "defaultDeck": {"type": "int", "null": true},
     "options": {"options": ["PRIMARY KEY (uid)"]}
 }
