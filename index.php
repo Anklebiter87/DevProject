@@ -1,9 +1,5 @@
 <?php
-require_once 'includes/autoloader.php';
-require_once 'includes/logincheck.php';
-session_start();
-authenticated();
-require_once 'includes/pageglobals.php';
+require_once "include/baseinclude.php"
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
