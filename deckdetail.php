@@ -4,9 +4,8 @@ require_once 'includes/logincheck.php';
 session_start();
 authenticated();
 require_once 'includes/pageglobals.php';
-require_once 'includes/deckdetailview.php';
 require_once 'includes/cards.php';
-card_check($user);
+require_once 'includes/deckdetailview.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -62,9 +61,10 @@ card_check($user);
                             <div class="card-body">
                                 <div class="row">
                                     <?php
-
-                                    $cards = card_list($user);
-                                    foreach(card_list($user) as $card){
+                                    foreach($cards->get_all_cards() as $card){
+                                        if($deck->check_for_card($card)){
+                                            continue;
+                                        }               
                                     ?>
                                     <div class="col-3">
                                         <div class="card border border-darker" style="height:100%">
@@ -73,15 +73,15 @@ card_check($user);
                                             </div>
                                             <div class="card-body center">
                                                 <div style="padding:0px" class="pazaak-img border border-darker"
-                                                    data-value=<?php $card->get_type_action_str();?>>
-                                                    <img src="{% static card.cardType.picture %}">
+                                                    data-value=<?php echo $card->get_type_action_str();?>>
+                                                    <img src=<?php echo $card->get_image_path();?>>
                                                 </div>
                                             </div>
                                             <?php 
                                             if($deck->count() < 10){
                                             ?>
                                             <div class="card-footer">
-                                                <a href="{% url 'gambling:pazaak-deckaddcard' deck.pk card.pk%}">
+                                                <a href="deckaddcard.php?deck=<?php echo $deck->get_pk();?>&card=<?php echo $card->get_pk();?>">
                                                     <button type="button" class="btn btn-sm btn-secondary" >
                                                         Add Card
                                                     </button></a>
@@ -144,7 +144,7 @@ card_check($user);
                                                     </div>
                                                 </div>
                                                 <div class="card-footer center">
-                                                    <a href="removecard.php?deck=<?php echo $deck->get_pk()?>&card=<?php echo $card->get_pk()?>">
+                                                    <a href="deckremovecard.php?deck=<?php echo $deck->get_pk()?>&card=<?php echo $card->get_pk()?>">
                                                         <button type="button" class="btn btn-sm btn-secondary">
                                                             Remove Card
                                                         </button></a>

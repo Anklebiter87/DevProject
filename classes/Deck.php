@@ -40,10 +40,19 @@ class Deck extends DBHandler{
         return $this->valid;
     }
 
+    public function check_for_card($card){
+        foreach($this->cards as $c){
+            if($c->get_pk() == $card->get_pk()){
+                return True;
+            }
+        }
+        return False;
+    }
+
     public function add_card($card){
         if($this->cardCount < 10){
             if($this->cards != null){
-                if(!in_array($card, $this->cards)){
+                if(!$this->check_for_card($card)){
                     $card->add_to_deck($this->pk);
                     $this->cards[] = $card;
                     $this->cardCount++;
@@ -63,10 +72,12 @@ class Deck extends DBHandler{
     }
 
     public function remove_card($card){
-        if($this->cardCount == 0){
-            if(in_array($card, $this->cards)){
+        if($this->cardCount > 0){
+            if($this->check_for_card($card)){
                 $card->remove_from_deck($this->pk);
-                $this->cards = array_diff($this->cards, array($card));
+                if (($key = array_search($card, $this->cards)) !== false) {
+                    unset($this->cards[$key]);
+                }
                 $this->cardCount--;
                 $this->check_valid();
                 return True;
@@ -130,6 +141,14 @@ class Deck extends DBHandler{
             return True;
         }
         return False;
+    }
+
+    public function get_card($cardId){
+        foreach($this->cards as $card){
+            if($card->get_pk() == $cardId){
+                return $card;
+            }
+        }
     }
 
     public function populate_cards(){
