@@ -55,7 +55,6 @@ if(array_key_exists("gamblinguid", $_SESSION) && array_key_exists("gamblingtoken
     }
 }
 else{
-    Debug::error_log_print("Lost session cookies");
     header("Location: login.php");
 }
 
