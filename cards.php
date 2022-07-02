@@ -5,11 +5,9 @@ session_start();
 authenticated();
 require_once 'includes/pageglobals.php';
 require_once 'includes/cards.php';
-card_check($user);
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
     <title>Pazaak Cards</title>
     <?php
@@ -103,14 +101,13 @@ card_check($user);
                     <div class="card border border-darker">
                         <div class="card-header">
                             <h3>Inventory Cards:</h3>
-                            <h4>Total: <?php echo number_format(card_count($user)); ?></h4>
+                            <h4>Total: <?php echo number_format($cards->get_inventory_card_count()); ?></h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <?php
-                                $cards = card_list($user);
                                 $counter = 0;
-                                foreach ($cards as $card) {
+                                foreach ($cards->get_inventory_cards() as $card) {
                                 ?>
                                     <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="padding:0px">
                                         <div class="card">
@@ -176,14 +173,13 @@ card_check($user);
                     <div class="card border border-darker">
                         <div class="card-header">
                             <h3>Auto Generated Cards</h3>
-                            <h4>Total: <?php echo card_count($user, True); ?></h4>
+                            <h4>Total: <?php echo $cards->get_generated_card_count(); ?></h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <?php
-                                $cards = card_list($user, True);
                                 $counter = 0;
-                                foreach ($cards as $card) {
+                                foreach ($cards->get_generated_cards() as $card) {
                                 ?>
                                     <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="padding:0px">
                                         <div class="card">
@@ -219,7 +215,7 @@ card_check($user);
                                                                     <?php
                                                                     $deck = get_deck($card);
                                                                     $number = $deck->get_pk();
-                                                                    echo "<a href=carddetail.php/$number>";
+                                                                    echo "<a href=deckdetail.php?deck=$number>";
                                                                     ?>
                                                                     <button type="button" class="btn btn-sm btn-secondary">
                                                                         <?php echo $deck->get_name(); ?>
@@ -248,5 +244,4 @@ card_check($user);
         </div>
     </div>
 </body>
-
 </html>
