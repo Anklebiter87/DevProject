@@ -7,7 +7,7 @@
     "deck": {"type": "int", "null": true},
     "options": {"options": ["PRIMARY KEY (pk)", 
                             "FOREIGN KEY (characterId) REFERENCES Users(uid)",
-                            "FOREIGN KEY (deck) REFERENCES Deck(pk)",
+                            "FOREIGN KEY (deck) REFERENCES Deck(pk) ON DELETE SET NULL",
                             "FOREIGN KEY (cardType) REFERENCES CardType(pk)"
                             ]
                 }

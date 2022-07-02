@@ -11,6 +11,10 @@ class Card extends DBHandler{
     private $deck;
     private $owner;
 
+    public function get_pk(){
+        return $this->pk;
+    }
+
     public function get_uid(){
         return $this->uid;
     }

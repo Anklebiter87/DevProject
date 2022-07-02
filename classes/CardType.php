@@ -25,6 +25,9 @@ class CardType extends DBHandler{
     }
 
     public function get_actions_str(){
+        if($this->actions == null){
+            return "Action is null";
+        }
         if(count($this->actions) > 1){
             $message = "&#177;" . (string)$this->actions[0]->get_action();
         }

@@ -13,7 +13,7 @@ function add_to_db($db, $name, $admin, $action, $image, $special=False){
 }
 
 function get_random_type(){
-    $query = "SELECT pk from CardType where special = 0;";
+    $query = "SELECT pk from CardType where special = 0 AND admin = 0;";
     $db = new DBHandler();
     $results = $db->execute_query($query, array(), array());
     if($results->num_rows > 0){
