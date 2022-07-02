@@ -1,9 +1,5 @@
 <?php
-require_once 'includes/autoloader.php';
-require_once 'includes/logincheck.php';
-session_start();
-authenticated();
-require_once 'includes/pageglobals.php';
+require_once 'includes/baseincludes.php';
 require_once 'includes/cards.php';
 require_once 'includes/deckdetailview.php';
 ?>
@@ -65,6 +61,9 @@ require_once 'includes/deckdetailview.php';
                                         if($deck->check_for_card($card)){
                                             continue;
                                         }               
+                                        if($card->get_deck() != null){
+                                            continue;
+                                        }
                                     ?>
                                     <div class="col-3">
                                         <div class="card border border-darker" style="height:100%">

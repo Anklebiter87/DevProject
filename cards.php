@@ -1,9 +1,5 @@
 <?php
-require_once 'includes/autoloader.php';
-require_once 'includes/logincheck.php';
-session_start();
-authenticated();
-require_once 'includes/pageglobals.php';
+require_once 'includes/baseincludes.php';
 require_once 'includes/cards.php';
 ?>
 <!DOCTYPE html>
