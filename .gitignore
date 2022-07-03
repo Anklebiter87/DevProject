@@ -16,3 +16,8 @@ settings.json
 
 #notes
 notes
+
+#ignore ratchet
+vendor
+composer.json
+composer.lock
