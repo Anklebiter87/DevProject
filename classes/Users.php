@@ -14,6 +14,10 @@ class Users extends DBHandler{
     public function get_default_deck(){
         return $this->defaultDeck;
     }
+
+    public function get_name(){
+        return $this->characterName;
+    }
     
     private function process_character_info(){
         $swcapi = $this->jsonObj->swcapi;
@@ -83,6 +87,9 @@ class Users extends DBHandler{
         }else{
             if($this->uid != null){
                 $result = $this->execute_query($query, array($this->uid), array("i"));
+            }
+            else{
+                return False;
             }
         }
         if ($result->num_rows == 0){

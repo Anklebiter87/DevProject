@@ -167,15 +167,15 @@ $games = new Games($user);
                                     <div style="display:block" id=<?php echo "collapse-game-$counter-hidden"?>>
                                         <div class="row">
                                             <div class="col-12 col-sm-6">
-                                                <h4>Player 1: <?php echo $player1->get_name();?></h4>
+                                                <h4>Player 1: <?php echo $player1->get_player_name();?></h4>
                                             </div>
                                             <div class="col-12 col-sm-6">
                                                 <?php 
                                                 if($player2 != null){
-                                                    echo "<h4>Player 2: ".$player2->get_name()."</h4>";
+                                                    echo "<h4>Player 2: ".$player2->get_player_name()."</h4>";
                                                 }
                                                 else{
-                                                    if($game->get_joinable()){
+                                                    if($game->is_joinable()){
                                                         echo "<h4>Player 2: Waiting for Player 2</h4>";
                                                     }
                                                     else{
@@ -198,7 +198,7 @@ $games = new Games($user);
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <h4>Player 1: <?php echo $player1->get_name()?></h4>
+                                                        <h4>Player 1: <?php echo $player1->get_player_name()?></h4>
                                                     </div>
                                                     <div class="col-12 justify-content-center">
                                                         <h5>Wins: <?php echo $player1->get_wins()?></h5>
@@ -206,7 +206,7 @@ $games = new Games($user);
                                                     <div class="col-12">
                                                         <?php
                                                         if($player2 != null){
-                                                            echo "<h4>Player 2: ".$player2->get_name()."</h4>";
+                                                            echo "<h4>Player 2: ".$player2->get_player_name()."</h4>";
                                                         }
                                                         else{
                                                             if($game->is_owner($user)){
@@ -234,22 +234,8 @@ $games = new Games($user);
                                             </div>
                                             <div class="card-body">
                                                 <?php
-                                                echo "<p>";
-                                                if($game->get_state() == "needPlayer2"){
-                                                    echo "Waiting for Player 2";
-                                                }
-                                                elseif ($game->get_state() == "inProgress"){
-                                                    echo "Current game is playing";
-                                                }
-                                                elseif ($game->get_state() == "finished"){
-                                                    if($game->get_winner() != null){
-                                                        echo $game->get_winner()->get_name(). "won the last round";
-                                                    }
-                                                }
-                                                echo "</p>";
-                                                echo "<p>Rounds Played: ". $game->get_rounds(). "</p>";
+                                                echo game_state($game);
                                                 ?>
-                                                
                                             </div>
                                         </div>
                                         <div class="card border border-darker">
@@ -260,15 +246,16 @@ $games = new Games($user);
                                                 <div class="row">
                                                     <div class="col-3 col-sm-3">
                                                         <?php
+                                                        $pk = $game->get_pk();
                                                         if($game->get_state() == "ready"){
-                                                            echo "<a href=pazaak/play?game=$game->get_pk()>
+                                                            echo "<a href=pazaak/play?game=$pk>
                                                             <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Play Pazaak\">
                                                                 <i class=\"tim-icons icon-controller\"></i>
                                                             </button>
                                                         </a>";
                                                         }
                                                         else{
-                                                            echo "<a href=pazaak/setup?game=$game->get_pk()>
+                                                            echo "<a href=pazaak/setup?game=$pk>
                                                             <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Setup Pazaak\">
                                                                 <i class=\"tim-icons icon-settings-gear-63\"></i>
                                                             </button></a>";
@@ -277,8 +264,8 @@ $games = new Games($user);
                                                     </div>
                                                     <div class="col-3 col-sm-3">
                                                         <?php 
-                                                        if($game->is_owner){
-                                                            echo "<a href=pazaak/delete?game=$game->get_pk()>
+                                                        if($game->is_owner($user)){
+                                                            echo "<a href=deletegame.php?game=$pk>
                                                             <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Delete Pazaak\">
                                                                 <i class=\"tim-icons icon-simple-remove\"></i>
                                                             </button></a>";
@@ -310,14 +297,15 @@ $games = new Games($user);
                                     <div class="row">
                                         <div class="col-3 col-sm-3">
                                             <?php
+                                            $pk = $game->get_pk();
                                             if($game->get_state() == "ready"){
-                                                echo "<a href=pazaak/play?game=$game->get_pk()>";
+                                                echo "<a href=pazaak/play?game=$pk>";
                                                 echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Play Pazaak\">";
                                                 echo "<i class=\"tim-icons icon-controller\"></i>";
                                                 echo "</button></a>";
                                             }
                                             else{
-                                                echo "<a href=pazaak/setup?game=$game->get_pk()>";
+                                                echo "<a href=pazaak/setup?game=$pk";
                                                 echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Setup Pazaak\">";
                                                 echo "<i class=\"tim-icons icon-settings-gear-63\"></i>";
                                                 echo "</button></a>";
@@ -327,7 +315,7 @@ $games = new Games($user);
                                         <div class="col-3 col-sm-3">
                                             <?php
                                             if($game->is_owner($user)){
-                                                echo "<a href=pazaak/delete?deck=$game->get_pk()>";
+                                                echo "<a href=deletegame.php?game=$pk>";
                                                 echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Delete Game\">";
                                                 echo "<i class=\"tim-icons icon-trash-simple\"></i>";
                                                 echo "</button></a>";
@@ -459,24 +447,9 @@ $games = new Games($user);
                                                 <h4>State:</h4>
                                             </div>
                                             <div class="card-body">
-                                                {%if not game.active %}
-                                                <p>{{game.ready_to_start}}</p>
-                                                {%else%}
-                                                {%if game.ready%}
-                                                {%if game.winner%}
-                                                <p>{{game.winner}} won the last round</p>
-                                                {%else%}
-                                                {%if game.player1Joined and game.player2Joined%}
-                                                <p>Current game is playing</p>
-                                                {%else%}
-                                                <p>Nobody is playing</p>
-                                                {%endif%}
-                                                {%endif%}
-                                                {%else%}
-                                                <p>Game has not started</p>
-                                                {%endif%}
-                                                {%endif%}
-                                                <p>Rounds Played: {{game.round}}</p>
+                                                <?php
+                                                echo game_state($game);
+                                                ?>
                                             </div>
                                         </div>
                                         <div class="card border border-darker">
@@ -485,15 +458,18 @@ $games = new Games($user);
                                             </div>
                                             <div class="card-body">
                                                 <div class="col-12">
-                                                    {%if game.ready %}
-                                                    <a href="{% url 'gambling:pazaak-playgame' game.pk %}">
-                                                        <button type="button" class="btn btn-sm btn-secondary" title="Watch Pazaak">
+                                                    <?php
+                                                    $pk = $game->get_pk();
+                                                    if($game->get_state() == "ready"){
+                                                        echo "<a href=pazaak/play?game=$pk>
+                                                        <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Watch Pazaak\">
                                                             Watch Game
-                                                        </button>
-                                                    </a>
-                                                    {%else%}
-                                                    <h5>A link will be available when the game is ready</h5>
-                                                    {%endif%}
+                                                        </button></a>";
+                                                    }
+                                                    else{
+                                                        echo "<h5>A link will be available when the game is ready</h5>";
+                                                    }
+                                                    ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -502,25 +478,30 @@ $games = new Games($user);
                             </div>
                             <div class="card-footer">
                                 <div class="col-12 col-sm-12 center" id=<?php echo "collapse-watch-$counter-hidden"?> style="display:block">
-                                    {%if game.ready %}
-                                    <a href="{% url 'gambling:pazaak-playgame' game.pk %}">
-                                        <button type="button" class="btn btn-sm btn-secondary" title="Watch Pazaak">
-                                            Watch Game
-                                        </button>
-                                    </a>
-                                    {%elif not game.player2%}
-                                    {%if game.joinable%}
-                                    <a href="{{game.get_game_link}}">
-                                        <button type="button" class="btn btn-sm btn-secondary">
-                                            Click to join the game.
-                                        </button>
-                                    </a>
-                                    {%else%}
-                                    <h4>A link will be available when the game is ready</h4>
-                                    {%endif%}
-                                    {%else%}
-                                    <h4>A link will be available when the game is ready</h4>
-                                    {%endif%}
+                                <?php
+                                $pk = $game->get_pk();
+                                if($game->get_state() == "ready"){
+                                    echo "<a href=pazaak/play?game=$pk>
+                                    <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Watch Pazaak\">
+                                        Watch Game
+                                    </button></a>";
+                                }
+                                elseif($player2 == null){
+                                    if($game->is_joinable()){
+                                        echo "<a href=\"{{game.get_game_link}}\">
+                                              <button type=\"button\" class=\"btn btn-sm btn-secondary\">
+                                                Click to join game
+                                               </button></a>
+                                               </h4>";
+                                    }
+                                    else{
+                                        echo "<h4>A link will be available when the game is ready</h4>";
+                                    }
+                                }
+                                else{
+                                    echo "<h4>A link will be available when the game is ready</h4>";
+                                }
+                                ?>
                                 </div>
                             </div>
                         </div>
