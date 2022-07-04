@@ -56,12 +56,6 @@ $games = new Games($user);
                             Create Game
                         </button></a>
                 </li>
-                <li class="nav-item justify-content-center border">
-                    <a href="stats.php">
-                        <button type="button" class="btn btn-sm btn-secondary">
-                            Gambling Stats
-                        </button></a>
-                </li>
             </ul>
         </div>
     </div>
@@ -179,7 +173,7 @@ $games = new Games($user);
                                                         echo "<h4>Player 2: Waiting for Player 2</h4>";
                                                     }
                                                     else{
-                                                        echo "<h4>Player2: None</h4>";
+                                                        echo "<h4>Player 2: None</h4>";
                                                     }
                                                 }
                                                 ?>
@@ -248,14 +242,14 @@ $games = new Games($user);
                                                         <?php
                                                         $pk = $game->get_pk();
                                                         if($game->get_state() == "ready"){
-                                                            echo "<a href=pazaak/play?game=$pk>
+                                                            echo "<a href=play.php?game=$pk>
                                                             <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Play Pazaak\">
                                                                 <i class=\"tim-icons icon-controller\"></i>
                                                             </button>
                                                         </a>";
                                                         }
                                                         else{
-                                                            echo "<a href=pazaak/setup?game=$pk>
+                                                            echo "<a href=setup.php?game=$pk>
                                                             <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Setup Pazaak\">
                                                                 <i class=\"tim-icons icon-settings-gear-63\"></i>
                                                             </button></a>";
@@ -276,7 +270,8 @@ $games = new Games($user);
                                                         <?php
                                                         if($player2 == null){
                                                             if($game->is_owner($user)){
-                                                                echo "<button type=\"button\" id=\"GameButton\" class=\"btn btn-sm btn-secondary\" onclick=\"CopyGameLink()\" value=\"{{baseUrl}}{{game.get_game_link}}\">
+                                                                $game_link = $game->get_game_link();
+                                                                echo "<button type=\"button\" id=\"GameButton\" class=\"btn btn-sm btn-secondary\" onclick=\"CopyGameLink()\" value=$game_link>
                                                                     Copy opponent link
                                                                     </button>";
                                                             }
@@ -292,20 +287,20 @@ $games = new Games($user);
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer border border-darker">
                                 <div class="col-12 col-sm-12" id=<?php echo "collapse-game-$counter-hidden"?> style="display:block">
                                     <div class="row">
                                         <div class="col-3 col-sm-3">
                                             <?php
                                             $pk = $game->get_pk();
                                             if($game->get_state() == "ready"){
-                                                echo "<a href=pazaak/play?game=$pk>";
+                                                echo "<a href=play.php?game=$pk>";
                                                 echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Play Pazaak\">";
                                                 echo "<i class=\"tim-icons icon-controller\"></i>";
                                                 echo "</button></a>";
                                             }
                                             else{
-                                                echo "<a href=pazaak/setup?game=$pk";
+                                                echo "<a href=setup.php?game=$pk>";
                                                 echo "<button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Setup Pazaak\">";
                                                 echo "<i class=\"tim-icons icon-settings-gear-63\"></i>";
                                                 echo "</button></a>";
@@ -326,7 +321,8 @@ $games = new Games($user);
                                             <?php
                                             if($player2 == null){
                                                 if($game->is_owner($user)){
-                                                    echo "<button type=\"button\" id=\"GameButton\" class=\"btn btn-sm btn-secondary\" onclick=\"CopyGameLink()\" value=\"{{baseUrl}}{{game.get_game_link}}\">
+                                                    $game_link = $game->get_game_link();
+                                                    echo "<button type=\"button\" id=\"GameButton\" class=\"btn btn-sm btn-secondary\" onclick=\"CopyGameLink()\" value=$game_link>
                                                         Copy opponent link
                                                         </button>";
                                                 }
@@ -418,9 +414,8 @@ $games = new Games($user);
                                                         }
                                                         else{
                                                             if($game->is_joinable()){
-
-
-                                                            echo "<a href=\"{{game.get_game_link}}\">
+                                                                $game_link = $game->get_game_link();
+                                                            echo "<a href=$game_link>
                                                                   <button type=\"button\" class=\"btn btn-sm btn-secondary\">
                                                                     Click to join game
                                                                    </button></a>
@@ -461,7 +456,7 @@ $games = new Games($user);
                                                     <?php
                                                     $pk = $game->get_pk();
                                                     if($game->get_state() == "ready"){
-                                                        echo "<a href=pazaak/play?game=$pk>
+                                                        echo "<a href=play.php?game=$pk>
                                                         <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Watch Pazaak\">
                                                             Watch Game
                                                         </button></a>";
@@ -481,14 +476,15 @@ $games = new Games($user);
                                 <?php
                                 $pk = $game->get_pk();
                                 if($game->get_state() == "ready"){
-                                    echo "<a href=pazaak/play?game=$pk>
+                                    echo "<a href=play.php?game=$pk>
                                     <button type=\"button\" class=\"btn btn-sm btn-secondary\" title=\"Watch Pazaak\">
                                         Watch Game
                                     </button></a>";
                                 }
                                 elseif($player2 == null){
                                     if($game->is_joinable()){
-                                        echo "<a href=\"{{game.get_game_link}}\">
+                                        $game_link = $game->get_game_link();
+                                        echo "<a href=$game_link>
                                               <button type=\"button\" class=\"btn btn-sm btn-secondary\">
                                                 Click to join game
                                                </button></a>

@@ -13,6 +13,7 @@ class Pazaak extends DBHandler{
     private $rounds;
     private $winner;
     private $deleted;
+    private $ready;
 
     public function get_rounds(){
         return $this->rounds;
@@ -42,6 +43,10 @@ class Pazaak extends DBHandler{
         return $this->joinable;
     }
 
+    public function is_ready(){
+        return $this->ready;
+    }
+
     public function is_owner($user){
         if($this->player1->get_player_uid() == $user->get_uid()){
             return True;
@@ -49,6 +54,18 @@ class Pazaak extends DBHandler{
         else{
             return False;
         }
+    }
+
+    public function get_game_hash(){
+        $hashstr = $this->pk . $this->name . $this->timestamp . $this->player1->get_pk();
+        return md5($hashstr);
+    }
+
+    public function get_game_link(){
+        $server = $_SERVER["HTTP_HOST"];
+        $path = "pazaak/join.php?game=" . $this->pk;
+        $hash = "&hash=" . $this->get_game_hash();
+        return "http://" . $server . "/" . $path . $hash;
     }
 
     public function get_winner(){
@@ -71,15 +88,36 @@ class Pazaak extends DBHandler{
     }
 
     public function get_state(){
+        $message = "";
         if($this->winner != null){
-            return "finished";
+            $message = "finished";
+        }
+        elseif($this->ready){
+            $this->ready = True;
+            $message = "ready";
         }
         elseif($this->player2 == null){
-            return "needPlayer2";
+            $this->ready = False;
+            $message = "needPlayer2";
         }
-        if($this->ready){
-            return "ready";
+        elseif($this->player2->get_deck() == null){
+            $this->ready = False;
+            $message = "needPlayer2Deck";
         }
+        elseif($this->player1->get_deck() == null){
+            $this->ready = False;
+            $message = "needPlayer1Deck";
+        }
+        return $message;
+    }
+
+    public function set_player2($user){
+        $this->player2 = $this->create_player($user);
+        $query = "UPDATE Pazaak SET player2 = ? WHERE pk = ?";
+        $values = array($this->player2->get_pk(), $this->pk);
+        $types = array("i", "i");
+        $this->execute_query($query, $values, $types);
+        $this->get_state();
     }
 
     public function create_new_game($name, $user, $joinable){

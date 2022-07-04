@@ -14,7 +14,15 @@ class Player extends DBHandler{
     }
 
     public function set_deck($deck){
+        $query = "UPDATE Player SET deck = ? WHERE pk = ?";
+        $values = array($deck->get_pk(), $this->pk);
+        $types = array("ii");
+        $this->execute_query($query, $values, $types);
         $this->deck = $deck;
+    }
+
+    public function get_deck(){
+        return $this->deck;
     }
 
     public function get_player_name(){

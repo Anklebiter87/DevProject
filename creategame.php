@@ -1,6 +1,6 @@
 <?php
 require_once "includes/baseincludes.php";
-if($_POST){
+if(!empty($_POST)){
     $game = new Pazaak();
     if(array_key_exists("joinable", $_POST)){
         $joinable = True;
@@ -9,7 +9,13 @@ if($_POST){
         $joinable = False;
     }
     $created = $game->create_new_game($_POST['name'], $user, $joinable);
-    header("Location: index.php");
+    if($created){
+        header("Location: setup.php?game=" . $game->get_pk());
+    }
+    else{
+        header("Location: index.php");
+    }
+    exit();
 }
 ?>
 <!DOCTYPE html>
