@@ -9,10 +9,24 @@ class Users extends DBHandler{
     private $gamblingLimit;
     private $gamblingDebt;
     private $defaultDeck;
+    private $totalWins;
+    private $totalGames;
     private $jsonObj;
 
     public function get_default_deck(){
         return $this->defaultDeck;
+    }
+
+    public function get_total_wins(){
+        return $this->totalWins;
+    }
+
+    public function get_total_games(){
+        return $this->totalGames;
+    }
+
+    public function get_total_loses(){
+        return $this->totalGames - $this->totalWins;
     }
 
     public function get_name(){
@@ -45,6 +59,8 @@ class Users extends DBHandler{
             $this->gamblingLimit = $row['gamblingLimit'];
             $this->gamblingDebt = $row['gamblingDebt'];
             $this->defaultDeck = $row['defaultDeck'];
+            $this->totalWins = $row['totalwins'];
+            $this->totalGames = $row['totalgames'];
         }
     }
 

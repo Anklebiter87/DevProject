@@ -94,8 +94,8 @@ $games = new Games($user);
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6 col-sm-3">
-                                        <p>Wins: {{wins|intcomma}}</p>
-                                        <p>Losses: {{loses|intcomma}}</p>
+                                        <p>Wins: <?php echo number_format($user->get_total_wins())?></p>
+                                        <p>Losses: <?php echo number_format($user->get_total_loses())?></p>
                                     </div>
                                     <div class="col-12 col-sm-9">
                                         <div class="row" style="padding:0px">
@@ -126,7 +126,7 @@ $games = new Games($user);
                                                     </button></a>
                                             <?php }?>
                                         </div>
-                                        <p>Total Games Played: {{totalGames|intcomma}}</p>
+                                        <p>Total Games Played: <?php echo number_format($user->get_total_games())?></p>
                                     </div>
                                 </div>
                             </div>
