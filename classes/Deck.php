@@ -21,7 +21,6 @@ class Deck extends DBHandler{
         else{
             return $this->cardCount;
         }
-        
     }
 
     public function get_name(){
@@ -127,8 +126,8 @@ class Deck extends DBHandler{
     }
 
     public function get_deck_by_name($name, $user){
-        $query = "SELECT * FROM Deck WHERE name = ?;";
-        $values = array($name);
+        $query = "SELECT * FROM Deck WHERE name = ? and characterId = ?;";
+        $values = array($name, $user->get_uid());
         $types = array("s");
         $results = $this->execute_query($query, $values, $types);
         if($results->num_rows > 0){

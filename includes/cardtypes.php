@@ -38,9 +38,9 @@ function populate_card_types(){
         }
     }else{
         foreach(ACTIONS as $action){
-            $plusName = "Pazak Card +". $action;
-            $minusName = "Pazak Card -". $action;
-            $specialName = "Pazak Card +/-". $action;
+            $plusName = "Pazaak Card +". $action;
+            $minusName = "Pazaak Card -". $action;
+            $specialName = "Pazaak Card +/-". $action;
             $plusAction = json_encode([$action]);
             $minusAction = json_encode([$action*-1]);
             $specialAction = json_encode([$action, $action*-1]);

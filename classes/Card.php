@@ -47,14 +47,24 @@ class Card extends DBHandler{
         return $this->cardType->get_actions_str();
     }
 
-    public function set_card_from_database($pk, $user){
-        $query = "SELECT * FROM Card WHERE pk = ? AND characterId = ?";
-        $values = array($pk, $user->get_uid());
+    public function set_card_from_database($pk, $user, $uid=null){
+        if($uid == null){
+            $query = "SELECT * FROM Card WHERE pk = ? AND characterId = ?";
+            $values = array($pk, $user->get_uid());
+        }
+        else{
+            $query = "SELECT * FROM Card WHERE uid = ? AND characterId = ?";
+            $values = array($uid, $user->get_uid());
+        }
         $types = array("ii");
         $result = $this->execute_query($query, $values, $types);
         if($result->num_rows > 0){
             $row = $result->fetch_assoc();
             $this->set_card_from_query($row, $user);
+            return True;
+        }
+        else{
+            return False;
         }
     }
 
@@ -72,6 +82,20 @@ class Card extends DBHandler{
         $this->owner = $user;
         $this->generated = True;
         $this->insert_card();
+    }
+
+    public function create_new_inv_card($user, $uid, $cardType, $hashName, $hash){
+        $this->uid = $uid;
+        $this->cardType = new CardType($cardType, $hashName, $hash);
+        $this->owner = $user;
+        $this->generated = False;
+        if($this->cardType->get_pk() != null){
+            $this->insert_card();
+            return True;
+        }
+        else{
+            return False;
+        }
     }
 
     public function set_card_from_query($row, $user){

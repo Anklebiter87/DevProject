@@ -98,6 +98,9 @@ require_once 'includes/cards.php';
                         <div class="card-header">
                             <h3>Inventory Cards:</h3>
                             <h4>Total: <?php echo number_format($cards->get_inventory_card_count()); ?></h4>
+                            <?php
+                                $swc->get_inventory_cards($user->get_uid());
+                            ?>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -113,7 +116,7 @@ require_once 'includes/cards.php';
                                                         <div class="col-12">
                                                             <div class="card border border-darker" style="height:100%">
                                                                 <div class="card-header center">
-                                                                    <h4>Pazaak Card: <?php echo $card->get_type_name(); ?></h4>
+                                                                    <h4><?php echo $card->get_type_name(); ?></h4>
                                                                 </div>
                                                                 <div class="card-body center">
                                                                     <div style="padding:0px" class="pazaak-img border border-darker" data-value="<?php echo $card->get_type_action_str(); ?>">
@@ -185,7 +188,7 @@ require_once 'includes/cards.php';
                                                         <div class="col-12">
                                                             <div class="card border border-darker" style="height:100%">
                                                                 <div class="card-header center">
-                                                                    <h4>Pazaak Card: <?php echo $card->get_type_name(); ?></h4>
+                                                                    <h4><?php echo $card->get_type_name(); ?></h4>
                                                                 </div>
                                                                 <div class="card-body center">
                                                                     <div style="padding:0px" class="pazaak-img border border-darker" data-value=<?php echo $card->get_type_action_str(); ?>>

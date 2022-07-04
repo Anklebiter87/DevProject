@@ -157,6 +157,43 @@ class SWC extends DBHandler {
         }
     }
 
+    public function get_inventory_cards($uid){
+        $token = $this->token->get_access_token();
+        $start = 0;
+        $total = 0;
+        $count = 0;
+        $entities = array();
+        try{
+            do
+            {
+                $url = "https://www.swcombine.com/ws/v2.0/inventory/1:$uid/items/owner/";
+                $values = array("access_token" => $token,
+                                "filter_type[]" => "type",
+                                "filter_value[]" => "225",
+                                "filter_inclusion[]" => "includes",
+                                "start_index" => $start);
+                $data = $this->make_request($url, "GET", $values);
+                $api = $data->swcapi->entities;
+                if($start == 0){
+                    $total = $api->attributes->total;
+                }
+                $start = $start + $api->attributes->count;
+                $count += $api->attributes->count;
+                $entities = array_merge($entities, $api->entity);
+            }
+            while($start < $total);
+            $data->swcapi->entities->entity = $entities;
+            $data->swcapi->entities->attributes->total = $total;
+            $data->swcapi->entities->attributes->count = $count;
+            return $data;
+        }
+        catch(SWCombineWSException $e){
+            //you should really log this correctly
+            Debug::error_log_print($e);
+            return null;
+        }
+    }
+
     public function set_token($token){
         $this->token = $token;
     }

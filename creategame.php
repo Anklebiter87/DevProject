@@ -26,6 +26,7 @@ if(!empty($_POST)){
     require_once 'includes/head.php';
     ?>
 </head>
+<body>
 <div class="row">
     <div class='card'>
         <div class='card-header'>
