@@ -1,4 +1,5 @@
 <?php
+/* hash lookup table for custom cards */
 $Lookup = array();
 $Lookup["Pazaak Card +/-1"] = "0bae0325121a47c0e516e0e2162b8447032b33f6206a7bbae9fff478abb8aa44fecfe3ba5930ce126d57adb08ddd0b91f44e19209906b7e44b2d517d0d90cdb5";
 $Lookup["Pazaak Card +/-2"] = "4787f62383020a31b5d6bfae6a36e8bb3c3aab6f0686e1749e05351b7090506d4b6edde1c42c6ba75fc64ff6b78206ff9363c5dab070acf82da85216e903f5dc";
